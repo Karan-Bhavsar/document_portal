@@ -1,0 +1,22 @@
+langchain==0.2.14
+python-dotenv
+langchain_groq
+langchain_google_genai
+langchain-community==0.2.12
+pypdf
+faiss-cpu
+sentence-transformers
+langchain-core==0.2.32
+structlog
+PyMuPDF
+langchain-groq 
+huggingface_hub
+langchain_huggingface
+pandas
+streamlit
+pytest
+langchain-core[tracing]
+
+
+
+-e .
