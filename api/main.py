@@ -15,6 +15,9 @@ from src.document_ingestion.data_ingestion import (
 from src.document_analyzer.data_analysis import DocumentAnalyzer 
 from src.document_compare.document_comparator import DocumentComparator, DocumentComparatorLLM
 from src.document_chat.retrieval import ConversationalRAG
+FAISS_BASE = os.getenv("FAISS_BASE", "faiss_index")
+UPLOAD_BASE = os.getenv("UPLOAD_BASE", "upload_data")
+
 
 app = FastAPI(title="Document Portal API", version= "0.1")
 
@@ -51,14 +54,15 @@ class FastAPIFileAdapter:
         return self._uf.file.read()
 
 
-def _read_pdf_via_handler(handler: DocHandler, path: str) -> str:
-    """
-    Helper function to read PDF using DocHandler.
-    """
-    try:
-        pass
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error reading PDF: {str(e)}")
+def _read_pdf_via_handler(self, handler: DocHandler, path: str) -> str:
+    if hasattr(handler, "read_pdf"):
+        return handler.read_pdf(path)  # type: ignore
+
+    if hasattr(handler, "read"):
+        return handler.read(path)  # type: ignore
+
+    raise RuntimeError("DocHandler has neither read_pdf nor read method.")
+
 
 
 @app.post("/analyze")
