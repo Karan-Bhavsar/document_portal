@@ -1,4 +1,5 @@
-from fastapi import FastAPI, UploadFile, File, Form, HTTPException, Request
+from unittest import result
+from fastapi import FastAPI, Path, UploadFile, File, Form, HTTPException, Request
 from fastapi.responses import JSONResponse, HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -13,7 +14,7 @@ from src.document_ingestion.data_ingestion import (
     FaissManager
 )
 from src.document_analyzer.data_analysis import DocumentAnalyzer 
-from src.document_compare.document_comparator import DocumentComparator, DocumentComparatorLLM
+from src.document_compare.document_comparator import DocumentComparatorLLM
 from src.document_chat.retrieval import ConversationalRAG
 FAISS_BASE = os.getenv("FAISS_BASE", "faiss_index")
 UPLOAD_BASE = os.getenv("UPLOAD_BASE", "upload_data")
@@ -29,9 +30,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# serve static & templates
-app.mount("/static", StaticFiles(directory="../static"), name="static")
-templates = Jinja2Templates(directory="../templates")
+from pathlib import Path
+from fastapi.staticfiles import StaticFiles
+
+STATIC_DIR = Path(__file__).resolve().parent.parent / "static"
+if STATIC_DIR.exists():
+    app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
+
+TEMPLATES_DIR = Path(__file__).resolve().parent.parent / "templates"
+templates = Jinja2Templates(directory=str(TEMPLATES_DIR))
 
 @app.get("/", response_class=HTMLResponse)
 async def serve_ui(request: Request):
@@ -54,14 +61,12 @@ class FastAPIFileAdapter:
         return self._uf.file.read()
 
 
-def _read_pdf_via_handler(self, handler: DocHandler, path: str) -> str:
+def _read_pdf_via_handler(handler: DocHandler, path: str) -> str:
     if hasattr(handler, "read_pdf"):
         return handler.read_pdf(path)  # type: ignore
-
-    if hasattr(handler, "read"):
-        return handler.read(path)  # type: ignore
-
-    raise RuntimeError("DocHandler has neither read_pdf nor read method.")
+    if hasattr(handler, "read_"):
+        return handler.read_(path)  # type: ignore
+    raise RuntimeError("DocHandler has neither read_pdf nor read_ method.")
 
 
 
@@ -73,8 +78,8 @@ async def analyze_document(file: UploadFile = File(...)) -> Any:
         text = _read_pdf_via_handler(dh, saved_path)
 
         analyzer = DocumentAnalyzer()
-        analyzer.analyze_document(text)
-        return JSONResponse(content={"message": "Document analyzed successfully"})
+        result = analyzer.analyze_document(text)
+        return JSONResponse(content=result)
 
     except HTTPException:
         raise
@@ -162,3 +167,4 @@ async def chat_query(
 
 # commands for running fast api server:
 #uvicorn main:app --reload
+#python -m uvicorn api.main:app --reload
