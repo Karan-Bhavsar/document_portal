@@ -1,14 +1,20 @@
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
+
 document_analysis_prompt = ChatPromptTemplate.from_template("""
-You highly capable assistant to analyize and summarize document
-Return valid Json matching schema below
-                                          
-{format_instructions}                                          
-                                           
-Analyze the Document                                          
-{document_text}                                          
-                                          """)
+You are a highly capable assistant to analyze and summarize a document.
+
+IMPORTANT OUTPUT RULES:
+- Return ONLY valid JSON.
+- Do NOT include markdown, code blocks, or any extra text.
+- The JSON must strictly match the schema below.
+
+{format_instructions}
+
+Analyze the document:
+{document_text}
+""")
+
 
 document_compare_prompt = ChatPromptTemplate.from_template("""
 You will be provided with content from two PDFs. Your tasks are as follows:

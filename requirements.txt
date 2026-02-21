@@ -20,5 +20,6 @@ pypdf==5.8.0
 uvicorn
 python-multipart
 cfn-lint
--e .
+langchain-huggingface
+sentence-transformers
 
