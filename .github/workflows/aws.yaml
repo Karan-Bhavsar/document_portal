@@ -4,6 +4,7 @@ on:
     workflows: ["Run Unit Tests"]   # Match the name in your ci.yaml
     types:
       - completed
+
 env:
   AWS_REGION: us-east-1
   ECR_REPOSITORY: documentportal
@@ -38,6 +39,10 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
+      - name: Debug region being used
+        run: |
+          echo "AWS_REGION from workflow env: $AWS_REGION"
+
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
@@ -53,7 +58,6 @@ jobs:
           docker build -t $IMAGE_URI .
           docker push $IMAGE_URI
           echo "image=$IMAGE_URI" >> $GITHUB_OUTPUT
-
 
   # -------------------------------
   # 2. Deploy to ECS
