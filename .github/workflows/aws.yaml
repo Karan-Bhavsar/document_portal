@@ -5,7 +5,7 @@ on:
     types:
       - completed
 env:
-  AWS_REGION: us-east-1
+  AWS_REGION: us-east-2
   ECR_REPOSITORY: documentportal
   ECS_SERVICE: document-portal-service
   ECS_CLUSTER: document-portal-cluster
@@ -15,7 +15,7 @@ env:
 permissions:
   id-token: write
   contents: read
-  
+
 jobs:
   # -------------------------------
   # 1. Build & Push Docker Image
