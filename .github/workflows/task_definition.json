@@ -1,7 +1,7 @@
 {
   "family": "documentportaltd",
   "networkMode": "awsvpc",
-  "executionRoleArn": "arn:aws:iam::623705167493:role/ecsTaskExecutionRole",
+  "executionRoleArn": "arn:aws:iam::459497895986:role/ecsTaskExecutionRole",
   "requiresCompatibilities": ["FARGATE"],
   "cpu": "1024",
   "memory": "8192",
@@ -22,19 +22,16 @@
       ],
       "environment": [
         {
-          "name": "LANGCHAIN_PROJECT",
-          "value": "DOCUMENT PORTAL"
+          "name": "ENV",
+          "value": "production"
         }
       ],
       "secrets": [
         {
-          "name": "GROQ_API_KEY",
-          "valueFrom": "arn:aws:secretsmanager:us-east-1:623705167493:secret:GROQ_API_KEY"
-        },
-        {
-          "name": "GOOGLE_API_KEY",
-          "valueFrom": "arn:aws:secretsmanager:us-east-1:623705167493:secret:GOOGLE_API_KEY"
+          "name": "API_KEYS",
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:623705167493:secret:apikey-0EobN6"
         }
+        
       ],
       "logConfiguration": {
         "logDriver": "awslogs",
@@ -42,9 +39,7 @@
           "awslogs-group": "/ecs/documentportaltd",
           "awslogs-region": "us-east-1",
           "awslogs-stream-prefix": "ecs",
-          "awslogs-create-group": "true",
-          "mode": "non-blocking",
-          "max-buffer-size": "25m"
+          "awslogs-create-group": "true"
         }
       }
     }
