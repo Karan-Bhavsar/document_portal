@@ -214,4 +214,4 @@ input:checked + .slider:before{transform:translateX(20px)}
   .form-grid, .form-grid-2{grid-template-columns:1fr}
   .grid-3{grid-template-columns:1fr}
   .form-grid .actions, .form-grid-2 .actions{justify-content:stretch}
-}
+} 
