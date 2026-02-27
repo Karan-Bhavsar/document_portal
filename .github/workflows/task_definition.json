@@ -3,35 +3,28 @@
   "networkMode": "awsvpc",
   "executionRoleArn": "arn:aws:iam::623705167493:role/ecsTaskExecutionRole",
   "requiresCompatibilities": ["FARGATE"],
-  "cpu": "1024",
-  "memory": "8192",
+  "cpu": "512",
+  "memory": "2048",
   "containerDefinitions": [
     {
       "name": "document-portal-container",
-      "image": "623705167493.dkr.ecr.us-east-1.amazonaws.com/documentportal",
-      "cpu": 1024,
+      "image": "623705167493.dkr.ecr.us-east-1.amazonaws.com/document-portal",
+      "cpu": 512,
       "essential": true,
       "portMappings": [
         {
           "containerPort": 8080,
-          "hostPort": 8080,
-          "protocol": "tcp",
-          "name": "document-portal-container-8080-tcp",
-          "appProtocol": "http"
+          "protocol": "tcp"
         }
       ],
       "environment": [
-        {
-          "name": "ENV",
-          "value": "production"
-        }
+        { "name": "ENV", "value": "production" }
       ],
       "secrets": [
         {
           "name": "API_KEYS",
-          "valueFrom": "arn:aws:secretsmanager:us-east-1:623705167493:secret:apikey-0EobN6"
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:623705167493:secret:apikey-0EobN6-PmqVUg"
         }
-        
       ],
       "logConfiguration": {
         "logDriver": "awslogs",
